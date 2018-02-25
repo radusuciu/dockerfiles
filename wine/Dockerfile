@@ -18,21 +18,17 @@ RUN apt-key add Release.key
 RUN apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
 
 RUN apt-get update
-RUN apt-get -y install winehq-stable
+RUN apt-get -y install winehq-devel
 
 # install winetricks
 ADD https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks /usr/local/bin/
 RUN chmod 755 /usr/local/bin/winetricks
 
-# perform rest of installation
 RUN adduser --disabled-password --gecos '' wine
 WORKDIR /home/wine
-COPY readw readw/
-COPY install.sh .
 RUN chown -R wine:wine /home/wine
+RUN chown wine:wine /usr/local/bin/winetricks
 
 USER wine
 ENV WINEARCH win32
 ENV WINEPREFIX /home/wine/.wine32
-ENV DISPLAY :0
-RUN bash install.sh
